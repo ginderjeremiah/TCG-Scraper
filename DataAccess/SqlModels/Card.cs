@@ -18,7 +18,7 @@ namespace DataAccess.SqlModels
         [Column("product_type_id")]
         public int ProductTypeId { get; set; }
         [Column("rarity_name")]
-        public string RarityName { get; set; }
+        public string? RarityName { get; set; }
         [Column("sealed")]
         public bool Sealed { get; set; }
         [Column("market_price")]
@@ -58,7 +58,7 @@ namespace DataAccess.SqlModels
         [Column("intellect")]
         public string? Intellect { get; set; }
         [Column("release_date")]
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         [Column("number")]
         public string Number { get; set; }
         [Column("talent")]
@@ -70,7 +70,7 @@ namespace DataAccess.SqlModels
         [Column("defense_value")]
         public short? DefenseValue { get; set; }
         [Column("rarity_dbname")]
-        public string RarityDbName { get; set; }
+        public string? RarityDbName { get; set; }
         [Column("life")]
         public string? Life { get; set; }
         [Column("card_subtype")]

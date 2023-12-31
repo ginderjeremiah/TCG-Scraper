@@ -61,19 +61,18 @@ namespace DataAccess
             using var connection = new NpgsqlConnection(ConnectionString);
             connection.Open();
 
-            using (var copier = connection.BeginBinaryImport($"COPY {tableName} ({string.Join(",", columns.Select(col => col.ColumnName))}) FROM STDIN (FORMAT BINARY)"))
+            using var copier = connection.BeginBinaryImport($"COPY {tableName} ({string.Join(",", columns.Select(col => col.ColumnName))}) FROM STDIN (FORMAT BINARY)");
+
+            foreach (var row in dt.AsEnumerable())
             {
-                foreach (var row in dt.AsEnumerable())
+                copier.StartRow();
+                foreach (var col in columns)
                 {
-                    copier.StartRow();
-                    foreach (var col in columns)
-                    {
-                        copier.WriteDynamic(row[col]);
-                    }
+                    copier.WriteDynamic(row[col]);
                 }
-                copier.Complete();
-                copier.Close();
             }
+            copier.Complete();
+            copier.Close();
 
             using var command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;

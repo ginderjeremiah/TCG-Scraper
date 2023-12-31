@@ -5,7 +5,7 @@
         public string Description { get; set; }
         public string DetailNote { get; set; }
         public string? Intellect { get; set; } //not sure what data type this should be... possibly List<string>
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public string Number { get; set; }
         public List<string> Talent { get; set; }
         public string PitchValue { get; set; }
