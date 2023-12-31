@@ -6,7 +6,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Reflection;
 using System.Text.Json;
 
 string productLinesUrl = "https://mp-search-api.tcgplayer.com/v1/search/productLines?";
@@ -16,7 +15,7 @@ string productLineName = "Flesh and Blood TCG";
 int cardsPerRequest = 48;
 JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 HttpClient client = new();
-bool skipScrape = false;
+bool skipScrape = true;
 
 long startTime = Stopwatch.GetTimestamp();
 
@@ -104,148 +103,4 @@ var cards = cardData.DistinctBy(data => data.ProductId).Select(data => new Card(
 
 Cards.ImportCards(cards);
 
-//using var connection = new NpgsqlConnection("Copy data ()");
-//connection.BeginBinaryImport("");     
-
-//File.WriteAllText("cardData.json", JsonSerializer.Serialize(cardData));
-
-//Console.WriteLine("Writing cardInfo.csv...");
-
-//var namedData = cardData.DistinctBy(data => data.ProductUrlName).ToDictionary(data => data.ProductUrlName, data => data);
-//var numData = cardData.DistinctBy(data => data.ProductId).ToDictionary(data => data.ProductId, data => data);
-
-//File.WriteAllText("cardDataV2.json", JsonSerializer.Serialize(numData));
-
-//var invalidNames = cardData.Select(d => d.ProductUrlName).ToList();
-
-//var cardInfoCsv = cardData.Select(data => string.Join(",", cardInfoProps.Select(prop => GetValue(prop, data)).Concat(customAttProps.Select(prop => GetValue(prop, data.CustomAttributes)))));
-//cardInfoCsv = cardInfoCsv.Prepend(string.Join(",", cardInfoProps.Select(prop => prop.Name).Concat(customAttProps.Select(prop => prop.Name))));
-
-//File.WriteAllLines("cardInfo.csv", cardInfoCsv);
-
-//Console.WriteLine("Writing listingInfo.csv...");
-
-//var listingInfoCsv = cardData.SelectMany(data => data.Listings).Select(listing => string.Join(",", listingProps.Select(prop => GetValue(prop, listing))));
-//listingInfoCsv = listingInfoCsv.Prepend(string.Join(",", listingProps.Select(prop => prop.Name)));
-
-//File.WriteAllLines("listingInfo.csv", listingInfoCsv);
-
 Console.WriteLine($"Finished in: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
-
-string GetValue(PropertyInfo prop, object obj)
-{
-    var val = prop.GetValue(obj);
-    if (val == null)
-    {
-        return "null";
-    }
-    else if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>)))
-    {
-        var valList = (IEnumerable<object>)val;
-        return $"\"{string.Join(",", valList.Select(v => v?.ToString()?.Replace("\"", "\"\"") ?? "null"))}\"";
-    }
-    else
-    {
-        return $"\"{val.ToString().Replace("\"", "\"\"")}\"";
-    }
-}
-
-
-
-
-//class RequestContext
-//{
-//    public RequestContextCart Cart { get; set; } = new();
-//    public string ShippingCountry { get; set; } = "US";
-//    public RequestUserProfile UserProfile { get; set; } = new();
-//}
-
-//class RequestContextCart
-//{
-//    //empty obj
-//}
-
-//class RequestUserProfile
-//{
-//    public string? ProductLineAffinity { get; set; } = null;
-//}
-
-//class PropTree<T>
-//{
-//    public List<PropTreeNode> Children { get; set; }
-
-//    public PropTree(T obj)
-//    {
-//        var baseProps = typeof(T).GetProperties().Where(prop => prop.CanWrite);
-//        Children = new List<PropTreeNode>();
-//        foreach (var prop in baseProps)
-//        {
-//            Children.Add(MakePropTreeNode(prop));
-//        }
-//    }
-
-//    private PropTreeNode MakePropTreeNode(PropertyInfo propertyInfo, PropTreeNode? parent = null)
-//    {
-//        var props = propertyInfo.PropertyType.GetProperties().Where(prop => prop.CanWrite);
-//        var node = new PropTreeNode()
-//        {
-//            Children = new List<PropTreeNode>(),
-//            Prop = propertyInfo,
-//            Parent = parent
-//        };
-
-//        foreach (var prop in props)
-//        {
-//            node.Children.Add(MakePropTreeNode(prop, node));
-//        }
-
-//        return node;
-//    }
-
-//    public List<string> GetPropNames()
-//    {
-//        List<string> names = new();
-//        foreach (var node in Children)
-//        {
-//            names = names.Concat(GetNodeNames(node)).ToList();
-//        }
-//        return names;
-//    }
-
-//    private List<string> GetNodeNames(PropTreeNode node)
-//    {
-//        List<string> names = new() { node.Prop.Name };
-//        foreach (var child in Children)
-//        {
-//            names = names.Concat(GetNodeNames(child)).ToList();
-//        }
-//        return names;
-//    }
-
-//    public List<string> GetPropValues(T obj)
-//    {
-//        List<string> values = new();
-//        foreach (var node in Children)
-//        {
-//            values = values.Concat(GetNodeValues(node, obj)).ToList();
-//        }
-//        return values;
-//    }
-
-//    private List<string> GetNodeValues(PropTreeNode node, T obj)
-//    {
-//        List<string> values = new() { node.Prop.GetValue(obj)?.ToString() ?? "null" };
-//        foreach (var child in Children)
-//        {
-//            values = values.Concat(GetNodeValues(node, obj)).ToList();
-//        }
-//        return values;
-//    }
-//}
-
-//class PropTreeNode
-//{
-//    public List<PropTreeNode> Children { get; set; }
-//    public PropertyInfo Prop { get; set; }
-//    public PropTreeNode? Parent { get; set; }
-//}

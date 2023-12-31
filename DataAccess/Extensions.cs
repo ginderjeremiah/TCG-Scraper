@@ -60,48 +60,56 @@ namespace DataAccess
             var columns = dt.Columns.Cast<DataColumn>();
             using var connection = new NpgsqlConnection(ConnectionString);
             connection.Open();
-            using var copier = connection.BeginBinaryImport($"COPY {tableName} ({string.Join(",", columns.Select(col => col.ColumnName))}) FROM STDIN (FORMAT BINARY)");
-            foreach (var row in dt.AsEnumerable())
+
+            using (var copier = connection.BeginBinaryImport($"COPY {tableName} ({string.Join(",", columns.Select(col => col.ColumnName))}) FROM STDIN (FORMAT BINARY)"))
             {
-                copier.StartRow();
-                foreach (var col in columns)
+                foreach (var row in dt.AsEnumerable())
                 {
-                    switch (row[col])
+                    copier.StartRow();
+                    foreach (var col in columns)
                     {
-                        case int i:
-                            copier.Write(i, NpgsqlDbType.Integer);
-                            break;
-                        case string str:
-                            copier.Write(str, NpgsqlDbType.Text);
-                            break;
-                        case float f:
-                            copier.Write(f, NpgsqlDbType.Real);
-                            break;
-                        case DateTime dtm:
-                            copier.Write(dtm, NpgsqlDbType.Timestamp);
-                            break;
-                        case short s:
-                            copier.Write(s, NpgsqlDbType.Smallint);
-                            break;
-                        case bool b:
-                            copier.Write(b, NpgsqlDbType.Boolean);
-                            break;
-                        case null:
-                        case DBNull:
-                            copier.WriteNull();
-                            break;
-                        default:
-                            throw new NotImplementedException($"Type conversion for {row[col].GetType()} has not been implemented.");
+                        copier.WriteDynamic(row[col]);
                     }
                 }
+                copier.Complete();
+                copier.Close();
             }
-            copier.Complete();
-            copier.Close();
 
             using var command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = postLoadSproc;
             command.ExecuteNonQuery();
+        }
+
+        internal static void WriteDynamic(this NpgsqlBinaryImporter copier, object val)
+        {
+            switch (val)
+            {
+                case int i:
+                    copier.Write(i, NpgsqlDbType.Integer);
+                    break;
+                case string str:
+                    copier.Write(str, NpgsqlDbType.Text);
+                    break;
+                case float f:
+                    copier.Write(f, NpgsqlDbType.Real);
+                    break;
+                case DateTime dtm:
+                    copier.Write(dtm, NpgsqlDbType.Timestamp);
+                    break;
+                case short s:
+                    copier.Write(s, NpgsqlDbType.Smallint);
+                    break;
+                case bool b:
+                    copier.Write(b, NpgsqlDbType.Boolean);
+                    break;
+                case null:
+                case DBNull:
+                    copier.WriteNull();
+                    break;
+                default:
+                    throw new NotImplementedException($"Type conversion for {val.GetType()} has not been implemented.");
+            }
         }
 
         internal static List<T> To<T>(this DataTable dt) where T : new()
