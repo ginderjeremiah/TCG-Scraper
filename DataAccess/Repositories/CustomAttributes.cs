@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public class CustomAttributes
+    public static class CustomAttributes
     {
         public static List<CustomAttribute> GetAllAttributes()
         {
@@ -13,25 +13,18 @@ namespace DataAccess.Repositories
             return dt.To<CustomAttribute>();
         }
 
-        public static void CreateNewAttributes(List<string> newAttributes)
+        public static List<CustomAttribute> GetAttributesByProductLine(int productLineId)
         {
-            var attCsv = string.Join(",", newAttributes);
-            AddAttributes(attCsv);
+            DataTable dt = new();
+            dt.Fill("SELECT * FROM custom_attributes WHERE product_line_id = @product_line_id", new NpgsqlParameter("product_line_id", productLineId));
+            return dt.To<CustomAttribute>();
         }
 
-        public static void CreateNewAttributes(string newAttributesCsv)
+        public static void ImportCustomAttributes(IEnumerable<CustomAttribute> atts)
         {
-            AddAttributes(newAttributesCsv);
-        }
-
-        private static void AddAttributes(string newAttributeCsv)
-        {
-            using var connection = new NpgsqlConnection(Configuration.ConnectionString);
-            using var command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "iu_sp_import_custom_attributes(@atts)";
-            command.Parameters.Add(new NpgsqlParameter("atts", newAttributeCsv));
-            command.ExecuteNonQuery();
+            DataTable dt = new();
+            dt.Fill(atts, false);
+            dt.CopyToSqlTable("custom_attributes_staging", "i_sp_import_custom_attributes_staging");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿-- Table: public.cards_staging
 
--- DROP TABLE IF EXISTS public.cards_staging;
+DROP TABLE IF EXISTS public.cards_staging;
 
 CREATE TABLE IF NOT EXISTS public.cards_staging
 (

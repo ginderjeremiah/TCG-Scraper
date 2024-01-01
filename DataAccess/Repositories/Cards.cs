@@ -12,7 +12,7 @@ namespace DataAccess.Repositories
             return dt.To<Card>();
         }
 
-        public static void ImportCards(List<Card> cards)
+        public static void ImportCards(IEnumerable<Card> cards)
         {
             DataTable dt = new();
             dt.Fill(cards);

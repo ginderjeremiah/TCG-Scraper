@@ -13,7 +13,7 @@ namespace DataAccess.Repositories
             return dt.To<CustomAttributesValue>();
         }
 
-        public static void ImportCustomAttributesValues(List<CustomAttributesValue> atts)
+        public static void ImportCustomAttributesValues(IEnumerable<CustomAttributesValue> atts)
         {
             DataTable dt = new();
             dt.Fill(atts);
