@@ -15,7 +15,7 @@ string productLineName = "Flesh and Blood TCG";
 int cardsPerRequest = 48;
 JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 HttpClient client = new();
-bool skipScrape = false;
+bool skipScrape = true;
 
 long startTime = Stopwatch.GetTimestamp();
 
@@ -121,7 +121,7 @@ else
 
 
 var cardInfoProps = typeof(CardInfo).GetProperties().Where(prop => prop.Name is not ("CustomAttributes" or "Listings"));
-var customAttProps = typeof(CustomAttributes).GetProperties();
+var customAttProps = typeof(ApiModels.CustomAttributes).GetProperties();
 var listingProps = typeof(CardListing).GetProperties();
 
 if (!skipScrape)
