@@ -26,7 +26,7 @@ namespace DataAccess
             var connBuilder = new NpgsqlConnectionStringBuilder
             {
                 Port = 5432,
-                Username = "cardreaderuploader",
+                Username = "card_reader_uploader",
                 Password = "TCG$craper32",
                 Host = "localhost",
                 Database = "CardData"
