@@ -27,22 +27,6 @@ CREATE TABLE IF NOT EXISTS public.cards
     product_line_name text COLLATE pg_catalog."default" NOT NULL,
     max_fulfullable_quantity integer NOT NULL,
     lowest_price real NOT NULL,
-    description text COLLATE pg_catalog."default",
-    detail_note text COLLATE pg_catalog."default",
-    intellect text COLLATE pg_catalog."default",
-    release_date timestamp without time zone,
-    "number" text COLLATE pg_catalog."default",
-    talent text COLLATE pg_catalog."default",
-    pitch_value smallint,
-    card_type text COLLATE pg_catalog."default" NOT NULL,
-    defense_value smallint,
-    rarity_dbname text COLLATE pg_catalog."default",
-    life text COLLATE pg_catalog."default",
-    card_subtype text COLLATE pg_catalog."default",
-    power text COLLATE pg_catalog."default",
-    flavor_text text COLLATE pg_catalog."default",
-    class text COLLATE pg_catalog."default" NOT NULL,
-    cost smallint,
     CONSTRAINT cards_pkey PRIMARY KEY (product_id)
 )
 

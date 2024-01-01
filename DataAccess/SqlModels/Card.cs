@@ -5,6 +5,8 @@ namespace DataAccess.SqlModels
     [Table("cards")]
     public class Card
     {
+        List<CustomAttributesValue>? _customAttributes;
+
         [Column("product_id")]
         public int ProductId { get; set; }
         [Column("shipping_category_id")]
@@ -51,38 +53,14 @@ namespace DataAccess.SqlModels
         public int MaxFulfullableQuantity { get; set; }
         [Column("lowest_price")]
         public float LowestPrice { get; set; }
-        [Column("description")]
-        public string? Description { get; set; }
-        [Column("detail_note")]
-        public string? DetailNote { get; set; }
-        [Column("intellect")]
-        public string? Intellect { get; set; }
-        [Column("release_date")]
-        public DateTime? ReleaseDate { get; set; }
-        [Column("number")]
-        public string Number { get; set; }
-        [Column("talent")]
-        public string? Talent { get; set; }
-        [Column("pitch_value")]
-        public short? PitchValue { get; set; }
-        [Column("card_type")]
-        public string CardType { get; set; }
-        [Column("defense_value")]
-        public short? DefenseValue { get; set; }
-        [Column("rarity_dbname")]
-        public string? RarityDbName { get; set; }
-        [Column("life")]
-        public string? Life { get; set; }
-        [Column("card_subtype")]
-        public string? CardSubType { get; set; }
-        [Column("power")]
-        public string? Power { get; set; }
-        [Column("flavor_text")]
-        public string? FlavorText { get; set; }
-        [Column("class")]
-        public string Class { get; set; }
-        [Column("cost")]
-        public short? Cost { get; set; }
-    }
 
+        public List<CustomAttributesValue> CustomAttributesValues
+        {
+            get
+            {
+                _customAttributes = Repositories.CustomAttributesValues.GetCustomAttributesValues(ProductId);
+                return _customAttributes;
+            }
+        }
+    }
 }

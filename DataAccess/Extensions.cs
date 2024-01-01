@@ -3,10 +3,11 @@ using NpgsqlTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DataAccess
 {
-    public static class Extensions
+    public static partial class Extensions
     {
         private static string ConnectionString => Configuration.ConnectionString;
 
@@ -231,6 +232,11 @@ namespace DataAccess
                 return 0f;
         }
 
+        public static string ToPostgresName(this string str)
+        {
+            return SnakeCaseRegex().Replace(str, "${l}_${u}").ToLower();
+        }
+
         private static class Converters
         {
             private static readonly Dictionary<Type, Func<object?, object>> _converters = new()
@@ -264,5 +270,8 @@ namespace DataAccess
             public PropertyInfo Property { get; set; }
             public string ColumnName { get; set; }
         }
+
+        [GeneratedRegex("(?<l>[a-z])(?<u>[A-Z])")]
+        private static partial Regex SnakeCaseRegex();
     }
 }
