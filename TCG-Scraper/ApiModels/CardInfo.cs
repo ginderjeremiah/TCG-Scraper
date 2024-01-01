@@ -1,4 +1,6 @@
-﻿namespace ApiModels
+﻿using System.Text.Json;
+
+namespace ApiModels
 {
     class CardInfo
     {
@@ -10,7 +12,7 @@
         public string RarityName { get; set; }
         public bool Sealed { get; set; }
         public float MarketPrice { get; set; }
-        public CustomAttributes CustomAttributes { get; set; }
+        public Dictionary<string, JsonElement> CustomAttributes { get; set; }
         public float LowestPriceWithShipping { get; set; }
         public string ProductName { get; set; }
         public float SetId { get; set; } //not sure why this isn't an int

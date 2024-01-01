@@ -1,12 +1,13 @@
 ﻿-- Table: public.custom_attributes_values
 
--- DROP TABLE IF EXISTS public.custom_attributes_values;
+DROP TABLE IF EXISTS public.custom_attributes_values;
 
 CREATE TABLE IF NOT EXISTS public.custom_attributes_values
 (
     custom_attribute_id integer NOT NULL,
     product_id integer NOT NULL,
-    value text COLLATE pg_catalog."default"
+    value text COLLATE pg_catalog."default",
+	CONSTRAINT custom_attributes_values_pkey PRIMARY KEY (product_id, custom_attribute_id)
 )
 
 TABLESPACE pg_default;

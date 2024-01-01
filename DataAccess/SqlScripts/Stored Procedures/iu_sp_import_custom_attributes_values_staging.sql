@@ -1,20 +1,34 @@
-﻿-- PROCEDURE: public.iu_sp_import_custom_attributes(text)
+﻿-- PROCEDURE: public.iu_sp_import_custom_attributes_values_staging()
 
--- DROP PROCEDURE IF EXISTS public.iu_sp_import_custom_attributes(text);
+-- DROP PROCEDURE IF EXISTS public.iu_sp_import_custom_attributes_values_staging();
 
-CREATE OR REPLACE PROCEDURE public.iu_sp_import_custom_attributes(
-	IN atts text)
+CREATE OR REPLACE PROCEDURE public.iu_sp_import_custom_attributes_values_staging(
+	)
 LANGUAGE 'sql'
     SECURITY DEFINER 
 AS $BODY$
-	INSERT INTO public.custom_attributes (
-		"name"
+	UPDATE public.custom_attributes_values AS cav
+		SET "value" = cavs."value"
+	FROM public.custom_attributes_values_staging AS cavs
+	WHERE cav.product_id = cavs.product_id
+		AND cav.custom_attribute_id = cavs.custom_attribute_id;
+	
+	INSERT INTO public.custom_attributes_values (
+		custom_attribute_id,
+		product_id,
+		"value"
 	)
-	SELECT new_atts.text
-	FROM STRING_TO_TABLE(atts, ',') AS new_atts
-	LEFT JOIN public.custom_attributes
-	ON custom_attributes."name" = new_atts.text
-	WHERE custom_attributes."name" IS NULL
+	SELECT
+		cavs.custom_attribute_id,
+		cavs.product_id,
+		cavs."value"
+	FROM public.custom_attributes_values_staging AS cavs
+	LEFT JOIN public.custom_attributes_values AS cav
+	ON cav.product_id = cavs.product_id
+		AND cav.custom_attribute_id = cavs.custom_attribute_id
+	WHERE cav.product_id IS NULL;
+
+	TRUNCATE public.custom_attributes_values_staging;
 $BODY$;
-ALTER PROCEDURE public.iu_sp_import_custom_attributes(text)
+ALTER PROCEDURE public.iu_sp_import_custom_attributes_values_staging()
     OWNER TO postgres;

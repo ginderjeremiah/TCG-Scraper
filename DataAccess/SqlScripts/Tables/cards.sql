@@ -1,6 +1,6 @@
 ﻿-- Table: public.cards
 
--- DROP TABLE IF EXISTS public.cards;
+DROP TABLE IF EXISTS public.cards;
 
 CREATE TABLE IF NOT EXISTS public.cards
 (
