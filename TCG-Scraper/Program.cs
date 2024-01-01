@@ -124,10 +124,10 @@ var cardInfoProps = typeof(CardInfo).GetProperties().Where(prop => prop.Name is 
 var customAttProps = typeof(ApiModels.CustomAttributes).GetProperties();
 var listingProps = typeof(CardListing).GetProperties();
 
-if (!skipScrape)
+if (!skipScrape || !File.Exists("cardData.json"))
     File.WriteAllText("cardData.json", JsonSerializer.Serialize(cardData));
 
-var cards = cardData.DistinctBy(data => data.ProductId).Select(data => new Card().AddMatchingPropertyValues(data).AddMatchingPropertyValues(data.CustomAttributes)).ToList();
+var cards = cardData.DistinctBy(data => data.ProductId).Select(data => new Card().AddMatchingPropertyValues(data)).ToList();
 
 Cards.ImportCards(cards);
 

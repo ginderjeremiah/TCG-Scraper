@@ -34,9 +34,3 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.cards
     OWNER to postgres;
-
-REVOKE ALL ON TABLE public.cards FROM cardreaderuploader;
-
-GRANT UPDATE, INSERT, SELECT ON TABLE public.cards TO cardreaderuploader;
-
-GRANT ALL ON TABLE public.cards TO postgres;

@@ -40,9 +40,5 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.card_listings_staging
     OWNER to postgres;
-
-REVOKE ALL ON TABLE public.card_listings_staging FROM cardreaderuploader;
-
-GRANT SELECT, TRUNCATE, UPDATE, INSERT ON TABLE public.card_listings_staging TO cardreaderuploader;
-
-GRANT ALL ON TABLE public.card_listings_staging TO postgres;
+	
+GRANT INSERT ON TABLE public.card_listings_staging TO card_reader_uploader;
