@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using DataAccess.Attributes;
+using Npgsql;
 using NpgsqlTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
@@ -125,7 +126,7 @@ namespace DataAccess
             return dt.AsEnumerable().Select(row => row.To<T>(columnProps)).ToList();
         }
 
-        public static T To<T>(this DataRow dataRow) where T : new()
+        internal static T To<T>(this DataRow dataRow) where T : new()
         {
             var columnProps = GetColumnProps<T>();
             CheckColumns<T>(dataRow.Table, columnProps);
@@ -177,36 +178,36 @@ namespace DataAccess
             return obj1;
         }
 
-        public static string AsString(this object? obj)
+        public static string AsString(this object? obj, string? defaultVal = null)
         {
             return obj switch
             {
                 IEnumerable<object?> enumerable => string.Join(",", enumerable.Select(o => o.AsString())),
-                _ => obj?.ToString() ?? string.Empty,
+                _ => obj?.ToString() ?? defaultVal ?? string.Empty,
             };
         }
 
-        public static int AsInt(this object? obj)
+        public static int AsInt(this object? obj, int defaultVal = 0)
         {
             if (obj is int intObj)
                 return intObj;
             else if (int.TryParse(obj.AsString(), out var val))
                 return val;
             else
-                return 0;
+                return defaultVal;
         }
 
-        public static DateTime AsDate(this object? obj)
+        public static DateTime AsDate(this object? obj, DateTime? defaultVal = null)
         {
             if (obj is DateTime dtObj)
                 return dtObj;
             else if (DateTime.TryParse(obj.AsString(), out var dt))
                 return dt;
             else
-                return DateTime.MinValue;
+                return defaultVal ?? DateTime.MinValue;
         }
 
-        public static bool AsBool(this object? obj)
+        public static bool AsBool(this object? obj, bool defaultVal = false)
         {
             if (obj is bool boolObj)
                 return boolObj;
@@ -215,27 +216,27 @@ namespace DataAccess
             else if (bool.TryParse(obj.AsString(), out var b))
                 return b;
             else
-                return false;
+                return defaultVal;
         }
 
-        public static short AsShort(this object? obj)
+        public static short AsShort(this object? obj, short defaultVal = 0)
         {
             if (obj is short intObj)
                 return intObj;
             else if (short.TryParse(obj.AsString(), out var val))
                 return val;
             else
-                return 0;
+                return defaultVal;
         }
 
-        public static float AsFloat(this object? obj)
+        public static float AsFloat(this object? obj, float defaultVal = 0f)
         {
             if (obj is float intObj)
                 return intObj;
             else if (float.TryParse(obj.AsString(), out var val))
                 return val;
             else
-                return 0f;
+                return defaultVal;
         }
 
         public static string ToPostgresName(this string str)

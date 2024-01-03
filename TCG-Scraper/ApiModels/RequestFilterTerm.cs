@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class RequestFilterTerm
+    public class RequestFilterTerm
     {
         public List<string> ProductLineName { get; set; }
         public List<string> SetName { get; set; }

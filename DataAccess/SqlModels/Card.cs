@@ -5,7 +5,7 @@ namespace DataAccess.SqlModels
     [Table("cards")]
     public class Card
     {
-        List<CustomAttributesValue>? _customAttributes;
+        readonly List<CustomAttributesValue>? _customAttributes;
 
         [Column("product_id")]
         public int ProductId { get; set; }
@@ -53,14 +53,5 @@ namespace DataAccess.SqlModels
         public int MaxFulfullableQuantity { get; set; }
         [Column("lowest_price")]
         public float LowestPrice { get; set; }
-
-        public List<CustomAttributesValue> CustomAttributesValues
-        {
-            get
-            {
-                _customAttributes = Repositories.CustomAttributesValues.GetCustomAttributesValues(ProductId);
-                return _customAttributes;
-            }
-        }
     }
 }

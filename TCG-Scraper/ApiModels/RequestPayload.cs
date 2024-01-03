@@ -1,7 +1,7 @@
 ﻿namespace ApiModels
 {
 
-    class RequestPayload
+    public class RequestPayload
     {
         //public string Algorithm { get; set; } = "sales_exp_fields_experiment";
         //public RequestContext Context { get; set; }

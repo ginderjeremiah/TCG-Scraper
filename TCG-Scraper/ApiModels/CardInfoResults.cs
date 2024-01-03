@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class CardInfoResults
+    public class CardInfoResults
     {
         //public RequestResultsAggregations Aggregations { get; set; }
         //public string Algorithm { get; set; }

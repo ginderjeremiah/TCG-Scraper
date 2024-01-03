@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class CardListing
+    public class CardListing
     {
         public bool DirectProduct { get; set; }
         public bool GoldSeller { get; set; }

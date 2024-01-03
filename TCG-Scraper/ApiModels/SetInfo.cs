@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class SetInfo
+    public class SetInfo
     {
         public int SetNameId { get; set; }
         public int CategoryId { get; set; }

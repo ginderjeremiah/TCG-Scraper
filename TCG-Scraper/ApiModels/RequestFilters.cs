@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class RequestFilters
+    public class RequestFilters
     {
         //public object Match { get; set; } = new();
         //public object Range { get; set; } = new();
