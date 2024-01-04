@@ -1,6 +1,4 @@
-﻿using DataAccess;
-
-namespace TCG_Scraper
+﻿namespace CommonLibrary
 {
     public class Logger : ILogger
     {

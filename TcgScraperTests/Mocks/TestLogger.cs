@@ -1,6 +1,6 @@
-﻿using TCG_Scraper;
+﻿using CommonLibrary;
 
-namespace TcgScraperTests
+namespace TcgScraperTests.Mocks
 {
     internal class TestLogger : ILogger
     {

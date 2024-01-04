@@ -1,6 +1,7 @@
 using ApiModels;
 using DataAccess.SqlModels;
 using TCG_Scraper;
+using TcgScraperTests.Mocks;
 
 namespace TcgScraperTests
 {

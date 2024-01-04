@@ -1,4 +1,4 @@
-﻿namespace TCG_Scraper
+﻿namespace CommonLibrary
 {
     public interface ILogger
     {

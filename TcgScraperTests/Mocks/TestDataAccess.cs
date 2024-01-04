@@ -2,12 +2,12 @@
 using DataAccess.Repositories;
 using DataAccess.SqlModels;
 
-namespace TcgScraperTests
+namespace TcgScraperTests.Mocks
 {
     internal class TestDataAccess : IDataAccess
     {
         public ICards Cards { get; set; } = new TestCards();
-        public ICustomAttributes CustomAttributes { get; set; } = new TestCustomAttributes();
+        public ICustomAttributes CustomAttributes { get; set; } = new TestCustomAttributesImport();
         public ICustomAttributesValues CustomAttributesValues { get; set; } = new TestCustomAttributesValues();
 
         public Dictionary<string, object> TestData = new();

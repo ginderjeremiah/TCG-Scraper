@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using CommonLibrary;
+using DataAccess;
 using Microsoft.Extensions.Configuration;
 
 namespace TCG_Scraper
