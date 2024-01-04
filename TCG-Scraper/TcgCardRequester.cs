@@ -23,10 +23,8 @@ namespace TCG_Scraper
 
         public async Task<ProductLine> GetProductLine(Func<ProductLine, bool> validator)
         {
-            var productLine = (await GetProductLines()).FirstOrDefault(validator)
+            return (await GetProductLines()).FirstOrDefault(validator)
                 ?? throw new Exception("Product Line not found.");
-
-            return productLine;
         }
 
         public async Task<List<ProductLine>> GetProductLines()
@@ -43,7 +41,6 @@ namespace TCG_Scraper
             var responseStream = await response.Content.ReadAsStreamAsync();
             return JsonSerializer.Deserialize<List<ProductLine>>(responseStream, _options)
                 ?? throw new Exception("Failed to parse Product Lines request.");
-
         }
 
         public async Task<List<SetInfo>> GetSets(int productLineId)

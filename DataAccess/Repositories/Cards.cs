@@ -1,22 +1,19 @@
 ﻿using DataAccess.SqlModels;
-using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public class Cards : ICards
+    public class Cards : BaseRepository, ICards
     {
+        public Cards(string connectionString) : base(connectionString) { }
+
         public List<Card> GetAllCards()
         {
-            DataTable dt = new();
-            dt.Fill("SELECT * FROM cards");
-            return dt.To<Card>();
+            return QueryToList<Card>("SELECT * FROM cards");
         }
 
         public void ImportCards(IEnumerable<Card> cards)
         {
-            DataTable dt = new();
-            dt.Fill(cards);
-            dt.CopyToSqlTable("cards_staging", "iu_sp_import_cards_staging");
+            CopyToSqlTable(cards, "cards_staging", "iu_sp_import_cards_staging");
         }
     }
 

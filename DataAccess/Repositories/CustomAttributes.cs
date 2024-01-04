@@ -1,30 +1,28 @@
 ﻿using DataAccess.SqlModels;
 using Npgsql;
-using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public class CustomAttributes : ICustomAttributes
+    public class CustomAttributes : BaseRepository, ICustomAttributes
     {
+        public CustomAttributes(string connectionString) : base(connectionString) { }
+
         public List<CustomAttribute> GetAllAttributes()
         {
-            DataTable dt = new();
-            dt.Fill("SELECT * FROM custom_attributes");
-            return dt.To<CustomAttribute>();
+            return QueryToList<CustomAttribute>("SELECT * FROM custom_attributes");
         }
 
         public List<CustomAttribute> GetAttributesByProductLine(int productLineId)
         {
-            DataTable dt = new();
-            dt.Fill("SELECT * FROM custom_attributes WHERE product_line_id = @product_line_id", new NpgsqlParameter("product_line_id", productLineId));
-            return dt.To<CustomAttribute>();
+            return QueryToList<CustomAttribute>(
+                "SELECT * FROM custom_attributes WHERE product_line_id = @product_line_id",
+                new NpgsqlParameter("product_line_id", productLineId)
+            );
         }
 
         public void ImportCustomAttributes(IEnumerable<CustomAttribute> atts)
         {
-            DataTable dt = new();
-            dt.Fill(atts, false);
-            dt.CopyToSqlTable("custom_attributes_staging", "i_sp_import_custom_attributes_staging");
+            CopyToSqlTable(atts, "custom_attributes_staging", "i_sp_import_custom_attributes_staging");
         }
     }
 

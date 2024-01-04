@@ -77,10 +77,10 @@ namespace TcgScraperTests
 
             scraper.ExecuteAtIntervals(TimeSpan.Zero, TimeSpan.FromSeconds(3), productLineName);
             var delay1 = Task.Delay(TimeSpan.FromSeconds(5));
-            var firstWait = Task.WhenAny(delay1, logger.AwaitNextErrorLog());
+            var firstWait = await Task.WhenAny(delay1, logger.AwaitNextErrorLog());
             Assert.IsTrue(firstWait != delay1);
             var delay2 = Task.Delay(TimeSpan.FromSeconds(5));
-            var secondWait = Task.WhenAny(delay2, logger.AwaitNextErrorLog());
+            var secondWait = await Task.WhenAny(delay2, logger.AwaitNextErrorLog());
             Assert.IsTrue(secondWait != delay2);
         }
 

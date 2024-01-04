@@ -27,9 +27,6 @@ namespace TcgScraperTests
                 CustomAttributes = new Dictionary<string, JsonElement> { { "Test", default } }
             } };
 
-            //var customAttributes = new List<CustomAttribute>() { new CustomAttribute() };
-            //var customAttributesValues = new List<CustomAttributesValue>() { new CustomAttributesValue() };
-
             loader.ImportAllCardData(cardData, productLineId);
             Assert.IsTrue(cards.DataLoaded is not null
                 && cards.DataLoaded.FirstOrDefault()?.ProductId == 1);

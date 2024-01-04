@@ -12,8 +12,6 @@ var scraper = new TcgScraper()
     SkipScrape = skipScrape,
 };
 
-//TODO Write unit test to verify that ExecuteAtIntervals runs twice.
 scraper.ExecuteAtIntervals(TimeSpan.Zero, TimeSpan.FromMinutes(2), productLineName);
 
 await Task.Delay(TimeSpan.FromMinutes(5));
-

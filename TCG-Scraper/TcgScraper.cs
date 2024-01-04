@@ -23,7 +23,7 @@ namespace TCG_Scraper
 
         public TcgScraper(IDataAccess? dataAccess = null, ILogger? logger = null)
         {
-            DataAccess = dataAccess ?? new DataAccess.DataAccess();
+            DataAccess = dataAccess ?? new DataAccess.DataAccess(Configuration.ConnectionSettings);
             Logger = logger ?? new Logger();
             CardLoader = new(Logger, DataAccess);
             CardRequester = new TcgCardRequester(Logger);

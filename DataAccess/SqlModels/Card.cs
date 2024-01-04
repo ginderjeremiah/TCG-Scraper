@@ -5,8 +5,6 @@ namespace DataAccess.SqlModels
     [Table("cards")]
     public class Card
     {
-        readonly List<CustomAttributesValue>? _customAttributes;
-
         [Column("product_id")]
         public int ProductId { get; set; }
         [Column("shipping_category_id")]

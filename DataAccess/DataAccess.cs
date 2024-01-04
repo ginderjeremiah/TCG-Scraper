@@ -4,13 +4,19 @@ namespace DataAccess
 {
     public class DataAccess : IDataAccess
     {
-        Cards? _cards;
-        CustomAttributes? _customAttributes;
-        CustomAttributesValues? _customAttributesValues;
+        private Cards? _cards;
+        private CustomAttributes? _customAttributes;
+        private CustomAttributesValues? _customAttributesValues;
+        private string ConnectionString { get; set; }
 
-        public ICards Cards => _cards ??= new Cards();
-        public ICustomAttributes CustomAttributes => _customAttributes ??= new CustomAttributes();
-        public ICustomAttributesValues CustomAttributesValues => _customAttributesValues ??= new CustomAttributesValues();
+        public DataAccess(ConnectionSettings connectionSettings)
+        {
+            ConnectionString = connectionSettings.GetConnectionString();
+        }
+
+        public ICards Cards => _cards ??= new Cards(ConnectionString);
+        public ICustomAttributes CustomAttributes => _customAttributes ??= new CustomAttributes(ConnectionString);
+        public ICustomAttributesValues CustomAttributesValues => _customAttributesValues ??= new CustomAttributesValues(ConnectionString);
     }
 
     public interface IDataAccess
