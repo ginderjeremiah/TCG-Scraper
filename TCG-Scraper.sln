@@ -10,6 +10,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCG-Scraper", "TCG-Scraper\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{D94B0F8E-7B59-44A4-812A-3028000FB4F2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcgScraperTests", "TcgScraperTests\TcgScraperTests.csproj", "{1BB85945-C7AA-4654-AD11-D62C7C19B563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{133D980F-500C-4713-B026-FF97153F363D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,14 @@ Global
 		{D94B0F8E-7B59-44A4-812A-3028000FB4F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D94B0F8E-7B59-44A4-812A-3028000FB4F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D94B0F8E-7B59-44A4-812A-3028000FB4F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BB85945-C7AA-4654-AD11-D62C7C19B563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB85945-C7AA-4654-AD11-D62C7C19B563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB85945-C7AA-4654-AD11-D62C7C19B563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB85945-C7AA-4654-AD11-D62C7C19B563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{133D980F-500C-4713-B026-FF97153F363D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{133D980F-500C-4713-B026-FF97153F363D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{133D980F-500C-4713-B026-FF97153F363D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{133D980F-500C-4713-B026-FF97153F363D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

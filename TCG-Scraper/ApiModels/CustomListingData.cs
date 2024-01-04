@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class CustomListingData
+    public class CustomListingData
     {
         public List<string> Images { get; set; } //not sure what appropriate data type is... assuming these are img URLs
 

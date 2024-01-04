@@ -1,30 +1,35 @@
 ﻿using DataAccess.SqlModels;
 using Npgsql;
-using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public static class CustomAttributes
+    public class CustomAttributes : BaseRepository, ICustomAttributes
     {
-        public static List<CustomAttribute> GetAllAttributes()
+        public CustomAttributes(string connectionString) : base(connectionString) { }
+
+        public List<CustomAttribute> GetAllAttributes()
         {
-            DataTable dt = new();
-            dt.Fill("SELECT * FROM custom_attributes");
-            return dt.To<CustomAttribute>();
+            return QueryToList<CustomAttribute>("SELECT * FROM custom_attributes");
         }
 
-        public static List<CustomAttribute> GetAttributesByProductLine(int productLineId)
+        public List<CustomAttribute> GetAttributesByProductLine(int productLineId)
         {
-            DataTable dt = new();
-            dt.Fill("SELECT * FROM custom_attributes WHERE product_line_id = @product_line_id", new NpgsqlParameter("product_line_id", productLineId));
-            return dt.To<CustomAttribute>();
+            return QueryToList<CustomAttribute>(
+                "SELECT * FROM custom_attributes WHERE product_line_id = @product_line_id",
+                new NpgsqlParameter("product_line_id", productLineId)
+            );
         }
 
-        public static void ImportCustomAttributes(IEnumerable<CustomAttribute> atts)
+        public void ImportCustomAttributes(IEnumerable<CustomAttribute> atts)
         {
-            DataTable dt = new();
-            dt.Fill(atts, false);
-            dt.CopyToSqlTable("custom_attributes_staging", "i_sp_import_custom_attributes_staging");
+            CopyToSqlTable(atts, "custom_attributes_staging", "i_sp_import_custom_attributes_staging");
         }
+    }
+
+    public interface ICustomAttributes
+    {
+        public List<CustomAttribute> GetAllAttributes();
+        public List<CustomAttribute> GetAttributesByProductLine(int productLineId);
+        public void ImportCustomAttributes(IEnumerable<CustomAttribute> atts);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ApiModels
 {
-    class CardInfo
+    public class CardInfo
     {
         public float ShippingCategoryId { get; set; }
         public bool Duplicate { get; set; }

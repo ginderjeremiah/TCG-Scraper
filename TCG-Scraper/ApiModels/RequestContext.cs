@@ -1,6 +1,6 @@
 ﻿namespace ApiModels
 {
-    class RequestContext
+    public class RequestContext
     {
         public RequestContextCart Cart { get; set; } = new();
         public string ShippingCountry { get; set; } = "US";

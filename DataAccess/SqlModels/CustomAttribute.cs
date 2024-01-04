@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using DataAccess.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.SqlModels
 {
