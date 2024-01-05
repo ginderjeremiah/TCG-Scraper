@@ -11,23 +11,53 @@ namespace TCG_Scraper
         private ProductLine? _productLine;
         private Timer? _timer;
 
-        private ILogger Logger { get; set; }
-        private IDataAccess DataAccess { get; set; }
+        private IApiLogger Logger { get; set; }
+        private IRepositoryManager DataAccess { get; set; }
         private TcgCardLoader CardLoader { get; set; }
         private TcgCardRequester CardRequester { get; set; }
+        private ScraperSettings Settings { get; set; }
 
-        public int CardsPerRequest { get; set; } = 48;
-        public string? SaveJsonPath { get; set; }
-        public bool SkipScrape { get; set; } = false;
-        public TimeSpan DelayBetweenRequests { get; set; } = TimeSpan.Zero;
-        public int MaxCardsPerSet { get; set; } = int.MaxValue; //Mostly just for testing purposes
-
-        public TcgScraper(IDataAccess? dataAccess = null, ILogger? logger = null)
+        public int CardsPerRequest
         {
-            DataAccess = dataAccess ?? new DataAccess.DataAccess(Configuration.ConnectionSettings);
-            Logger = logger ?? new Logger();
+            get => Settings.CardsPerRequest;
+            set => Settings.CardsPerRequest = value;
+        }
+
+        public string? SaveJsonPath
+        {
+            get => Settings.SaveJsonPath;
+            set => Settings.SaveJsonPath = value;
+        }
+        public bool SkipScrape
+        {
+            get => Settings.SkipScrape;
+            set => Settings.SkipScrape = value;
+        }
+        public TimeSpan DelayBetweenRequests
+        {
+            get => Settings.DelayBetweenRequests;
+            set => Settings.DelayBetweenRequests = value;
+        }
+        public int MaxCardsPerSet
+        {
+            get => Settings.MaxCardsPerSet;
+            set => Settings.MaxCardsPerSet = value;
+        }
+
+        public TcgScraper(IRepositoryManager dataAccess, IApiLogger logger, ScraperSettings? settings = null)
+        {
+            DataAccess = dataAccess;
+            Logger = logger;
             CardLoader = new(Logger, DataAccess);
-            CardRequester = new TcgCardRequester(Logger);
+            CardRequester = new(Logger);
+            Settings = new ScraperSettings
+            {
+                CardsPerRequest = 48,
+                SaveJsonPath = null,
+                SkipScrape = false,
+                DelayBetweenRequests = TimeSpan.Zero,
+                MaxCardsPerSet = int.MaxValue,
+            };
         }
 
         public void ExecuteAtIntervals(TimeSpan timeToFirstRun, TimeSpan timeBetweenEachRun, string productLineName)
@@ -85,10 +115,11 @@ namespace TCG_Scraper
         {
             Logger.Log($"Beginning loading cards for {productLine.ProductLineName}.");
             long startTime = Stopwatch.GetTimestamp();
-
             IEnumerable<CardInfo> cards;
 
-            if (!SkipScrape || !File.Exists(SaveJsonPath))
+            bool needScrape = !SkipScrape || !File.Exists(SaveJsonPath);
+
+            if (needScrape)
             {
                 var getSets = CardRequester.GetSets(productLine.ProductLineId);
                 var getTotals = CardRequester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
@@ -117,6 +148,9 @@ namespace TCG_Scraper
                 cards = JsonSerializer.Deserialize<List<CardInfo>>(File.OpenRead(SaveJsonPath))
                     ?? throw new Exception($"Failed to parse json file: {Path.GetFullPath(SaveJsonPath)}");
             }
+
+            if (needScrape && !string.IsNullOrWhiteSpace(SaveJsonPath))
+                File.WriteAllText(SaveJsonPath, JsonSerializer.Serialize(cards));
 
             CardLoader.ImportAllCardData(cards, productLine.ProductLineId);
 

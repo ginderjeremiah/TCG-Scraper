@@ -2,14 +2,14 @@
 
 namespace DataAccess
 {
-    public class DataAccess : IDataAccess
+    public class RepositoryManager : IRepositoryManager
     {
         private Cards? _cards;
         private CustomAttributes? _customAttributes;
         private CustomAttributesValues? _customAttributesValues;
         private string ConnectionString { get; set; }
 
-        public DataAccess(ConnectionSettings connectionSettings)
+        public RepositoryManager(ConnectionSettings connectionSettings)
         {
             ConnectionString = connectionSettings.GetConnectionString();
         }
@@ -19,7 +19,7 @@ namespace DataAccess
         public ICustomAttributesValues CustomAttributesValues => _customAttributesValues ??= new CustomAttributesValues(ConnectionString);
     }
 
-    public interface IDataAccess
+    public interface IRepositoryManager
     {
         public ICards Cards { get; }
         public ICustomAttributes CustomAttributes { get; }

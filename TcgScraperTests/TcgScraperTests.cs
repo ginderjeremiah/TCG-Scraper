@@ -1,5 +1,4 @@
 using ApiModels;
-using DataAccess.SqlModels;
 using TCG_Scraper;
 using TcgScraperTests.Mocks;
 
@@ -12,8 +11,8 @@ namespace TcgScraperTests
         public async Task ExecuteAtIntervals_InvalidProductLineName_ThrowsException()
         {
             var productLineName = "DoesNotExist";
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger);
 
             scraper.ExecuteAtIntervals(TimeSpan.Zero, TimeSpan.FromMinutes(100), productLineName);
@@ -28,8 +27,8 @@ namespace TcgScraperTests
         public async Task ExecuteAtIntervals_InvalidProductLineId_ThrowsException()
         {
             var productLineId = -1;
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger);
 
             scraper.ExecuteAtIntervals(TimeSpan.Zero, TimeSpan.FromMinutes(100), productLineId);
@@ -44,10 +43,10 @@ namespace TcgScraperTests
         public async Task ExecuteAtIntervals_ValidProductLineName_LoadsData()
         {
             string productLineName = "Flesh and Blood TCG";
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var dataLoaded = false;
-            var dataAccess = new TestDataAccess();
-            var testCards = new TestCardsImport
+            var dataAccess = new MockRepositoryManager();
+            var testCards = new MockCardsImport
             {
                 AwaitableTask = new Task(() => dataLoaded = true)
             };
@@ -68,8 +67,8 @@ namespace TcgScraperTests
         public async Task ExecuteAtIntervals_RunsMoreThanOnce()
         {
             string productLineName = "DoesNotExist";
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger)
             {
                 MaxCardsPerSet = 10,
@@ -89,8 +88,8 @@ namespace TcgScraperTests
         public async Task LoadCardsByProductLine_InvalidProductLineName_ThrowException()
         {
             var productLineName = "DoesNotExist";
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger);
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await scraper.LoadCardsByProductLine(productLineName));
@@ -100,8 +99,8 @@ namespace TcgScraperTests
         public async Task LoadCardsByProductLine_InvalidProductLineId_ThrowException()
         {
             var productLineId = -1;
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger);
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await scraper.LoadCardsByProductLine(productLineId));
@@ -111,10 +110,10 @@ namespace TcgScraperTests
         public async Task LoadCardsByProductLine_ValidProductLineId_LoadsData()
         {
             var productLineId = 62;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var dataLoaded = false;
-            var dataAccess = new TestDataAccess();
-            var testCards = new TestCardsImport
+            var dataAccess = new MockRepositoryManager();
+            var testCards = new MockCardsImport
             {
                 AwaitableTask = new Task(() => dataLoaded = true)
             };
@@ -143,8 +142,8 @@ namespace TcgScraperTests
                 CleanSetName = "wilds-of-eldraine"
             };
             var totalCardsInSet = 450;
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger)
             {
                 MaxCardsPerSet = 5,
@@ -166,8 +165,8 @@ namespace TcgScraperTests
                 CleanSetName = "wilds-of-eldraine"
             };
             var totalCardsInSet = 5;
-            var logger = new TestLogger();
-            var dataAccess = new TestDataAccess();
+            var logger = new MockLogger();
+            var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger)
             {
                 MaxCardsPerSet = 5,
@@ -177,17 +176,6 @@ namespace TcgScraperTests
             var result = await scraper.ScrapeCardsInSet(productLine, setInfo, totalCardsInSet);
 
             Assert.IsTrue(result.Count == 1 && result[0].Count == 5);
-        }
-    }
-
-    internal class TestCardsImport : TestCards
-    {
-        public Task? AwaitableTask { get; set; }
-        public IEnumerable<Card>? DataLoaded { get; set; }
-        public override void ImportCards(IEnumerable<Card> cards)
-        {
-            DataLoaded = cards;
-            AwaitableTask?.Start();
         }
     }
 }

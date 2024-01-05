@@ -10,11 +10,11 @@ namespace TcgScraperTests
     [TestClass]
     public class TcgCardLoaderTests
     {
-        private TestLogger _logger = new();
-        private TestDataAccess _dataAccess = new();
-        private TestCardsImport _cards = new();
-        private TestCustomAttributesImport _customAttributes = new();
-        private TestCustomAttributesValuesImport _customAttributesValues = new();
+        private MockLogger _logger = new();
+        private MockRepositoryManager _dataAccess = new();
+        private MockCardsImport _cards = new();
+        private MockCustomAttributesImport _customAttributes = new();
+        private MockCustomAttributesValuesImport _customAttributesValues = new();
 
         private void InitTestVars()
         {
@@ -196,18 +196,6 @@ namespace TcgScraperTests
                 ProductId = 1.0f,
                 CustomAttributes = new Dictionary<string, JsonElement> { { "Test3", default } }
             }};
-        }
-    }
-
-
-    internal class TestCustomAttributesValuesImport : TestCustomAttributesValues
-    {
-        public Task? AwaitableTask { get; set; }
-        public IEnumerable<CustomAttributesValue>? DataLoaded { get; set; }
-        public override void ImportCustomAttributesValues(IEnumerable<CustomAttributesValue> atts)
-        {
-            DataLoaded = atts;
-            AwaitableTask?.Start();
         }
     }
 }
