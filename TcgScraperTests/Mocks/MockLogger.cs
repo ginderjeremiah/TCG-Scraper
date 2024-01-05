@@ -2,7 +2,7 @@
 
 namespace TcgScraperTests.Mocks
 {
-    internal class TestLogger : ILogger
+    internal class MockLogger : IApiLogger
     {
         private LinkedList<string> Logs { get; set; } = new();
         private LinkedList<string> ErrorLogs { get; set; } = new();

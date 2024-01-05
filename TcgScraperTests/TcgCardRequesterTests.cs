@@ -10,7 +10,7 @@ namespace TcgScraperTests
         public async Task GetProductLine_InvalidProductLineName_ThrowsException()
         {
             var productLineName = "DoesNotExist";
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineName == productLineName));
@@ -20,7 +20,7 @@ namespace TcgScraperTests
         public async Task GetProductLine_InvalidProductLineId_ThrowsException()
         {
             var productLineId = -1;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineId == productLineId));
@@ -30,7 +30,7 @@ namespace TcgScraperTests
         public async Task GetProductLine_ValidProductLineNameLoadsSuccessfully()
         {
             var productLineName = "Flesh and Blood TCG";
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
@@ -41,7 +41,7 @@ namespace TcgScraperTests
         [TestMethod]
         public async Task GetProductLines_LoadsSuccessfully()
         {
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             var productLines = await requester.GetProductLines();
@@ -53,7 +53,7 @@ namespace TcgScraperTests
         public async Task GetSets_InvalidProductLineId_ThrowsException()
         {
             var productLineId = -1;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetSets(productLineId));
@@ -63,7 +63,7 @@ namespace TcgScraperTests
         public async Task GetSets_ValidProductLineId_LoadsSuccessfully()
         {
             var productLineId = 62;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             var sets = await requester.GetSets(productLineId);
@@ -75,7 +75,7 @@ namespace TcgScraperTests
         public async Task GetTotalCardsForProductLine_InvalidProductLine_ReturnsAllCardCount()
         {
             var productLineUrlName = "DoesNotExist";
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
             var totalCards = await requester.GetTotalCardsForProductLine(productLineUrlName);
@@ -87,7 +87,7 @@ namespace TcgScraperTests
         public async Task GetTotalCardsForProductLine_ValidProductLine_ReturnsCardCountForProductLine()
         {
             var productLineName = "Flesh and Blood TCG";
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
             var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine("");
@@ -102,7 +102,7 @@ namespace TcgScraperTests
         {
             var productLineName = "DoesNotExist";
             var numResults = 5;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
             var totalCards = await requester.GetTotalCardsForProductLine("");
 
@@ -117,7 +117,7 @@ namespace TcgScraperTests
             var productLineName = "Flesh and Blood TCG";
             var setSearchName = "DoesNotExist";
             var numResults = 5;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
             var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
@@ -132,7 +132,7 @@ namespace TcgScraperTests
         {
             var productLineName = "Flesh and Blood TCG";
             var numResults = 5;
-            var logger = new TestLogger();
+            var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
             var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);

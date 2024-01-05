@@ -143,7 +143,16 @@ namespace DataAccess.Repositories
                 T obj = new();
                 foreach (var prop in colProps)
                 {
-                    prop.Property.SetValue(obj, reader.GetValue(prop.ColumnName));
+                    switch (reader.GetValue(prop.ColumnName))
+                    {
+                        case DBNull:
+                        case null:
+                            prop.Property.SetValue(obj, null);
+                            break;
+                        case object val:
+                            prop.Property.SetValue(obj, val);
+                            break;
+                    }
                 }
                 objs.Add(obj);
             }

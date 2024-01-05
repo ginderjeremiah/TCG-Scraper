@@ -15,9 +15,9 @@ namespace TCG_Scraper
 
         private static HttpClient Client { get; } = new();
 
-        private ILogger Logger { get; set; }
+        private IApiLogger Logger { get; set; }
 
-        public TcgCardRequester(ILogger logger)
+        public TcgCardRequester(IApiLogger logger)
         {
             Logger = logger;
         }

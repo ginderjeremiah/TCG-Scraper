@@ -9,10 +9,10 @@ namespace TCG_Scraper
 {
     public partial class TcgCardLoader
     {
-        private ILogger Logger { get; set; }
-        private IDataAccess DataAccess { get; set; }
+        private IApiLogger Logger { get; set; }
+        private IRepositoryManager DataAccess { get; set; }
 
-        public TcgCardLoader(ILogger logger, IDataAccess dataAccess)
+        public TcgCardLoader(IApiLogger logger, IRepositoryManager dataAccess)
         {
             Logger = logger;
             DataAccess = dataAccess;

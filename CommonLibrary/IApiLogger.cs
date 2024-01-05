@@ -1,6 +1,6 @@
 ﻿namespace CommonLibrary
 {
-    public interface ILogger
+    public interface IApiLogger
     {
         public void Log(object log);
         public void LogError(object log);

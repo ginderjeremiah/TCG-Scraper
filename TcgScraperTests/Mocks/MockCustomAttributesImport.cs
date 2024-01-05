@@ -2,7 +2,7 @@
 
 namespace TcgScraperTests.Mocks
 {
-    internal class TestCustomAttributesImport : TestCustomAttributes
+    internal class MockCustomAttributesImport : MockCustomAttributes
     {
         public Task? AwaitableTask { get; set; }
         public IEnumerable<CustomAttribute>? DataLoaded { get; set; }

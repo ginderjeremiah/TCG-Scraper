@@ -1,6 +1,6 @@
 ﻿namespace CommonLibrary
 {
-    public class Logger : ILogger
+    public class ApiLogger : IApiLogger
     {
         private static readonly LinkedList<LogMessage> _logQueue = new();
         private static bool _isLogging = false;

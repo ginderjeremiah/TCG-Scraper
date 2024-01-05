@@ -1,4 +1,5 @@
 ﻿using DataAccess.SqlModels;
+using Npgsql;
 
 namespace DataAccess.Repositories
 {
@@ -6,9 +7,13 @@ namespace DataAccess.Repositories
     {
         public Cards(string connectionString) : base(connectionString) { }
 
-        public List<Card> GetAllCards()
+        public List<Card> GetAllCards(int offset = 0, int limit = 100)
         {
-            return QueryToList<Card>("SELECT * FROM cards");
+            limit = Math.Min(limit, 1000);
+
+            return QueryToList<Card>("SELECT * FROM cards LIMIT @Limit OFFSET @Offset",
+                new NpgsqlParameter("@Limit", limit),
+                new NpgsqlParameter("@Offset", offset));
         }
 
         public void ImportCards(IEnumerable<Card> cards)
@@ -19,7 +24,7 @@ namespace DataAccess.Repositories
 
     public interface ICards
     {
-        public List<Card> GetAllCards();
+        public List<Card> GetAllCards(int offset = 0, int limit = 100);
         public void ImportCards(IEnumerable<Card> cards);
     }
 }

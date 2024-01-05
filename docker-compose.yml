@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  carddataapi:
+    image: ${DOCKER_REGISTRY-}carddataapi
+    build:
+      context: .
+      dockerfile: CardDataAPI/Dockerfile
+    depends_on:
+    - "postgres"
+    networks:
+    - coreapp-network
+   
+  postgres:
+    container_name: 'postgres'
+    image: postgres:16.1-alpine
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=6skXq9e!J$7CiV&1)7j(xSD
+    ports:
+    - 5432:5432
+    expose:
+    - 5433
+    networks:
+    - coreapp-network
+
+networks:
+  coreapp-network:
+    driver: bridge
