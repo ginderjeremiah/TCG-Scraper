@@ -1,7 +1,12 @@
-﻿namespace CommonLibrary
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
+
+namespace CommonLibrary
 {
     public static class Extensions
     {
+        private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         public static string AsString(this object? obj, string? defaultVal = null)
         {
             return obj switch
@@ -61,6 +66,21 @@
                 return val;
             else
                 return defaultVal;
+        }
+
+        public static T? Deserialize<T>(this HttpResponseMessage msg)
+        {
+            return JsonSerializer.Deserialize<T>(msg.Content.ReadAsStream(), _options);
+        }
+
+        public static async Task<T?> DeserializeAsync<T>(this HttpResponseMessage msg)
+        {
+            return JsonSerializer.Deserialize<T>(await msg.Content.ReadAsStreamAsync(), _options);
+        }
+
+        public static JsonContent Serialize<T>(this T content)
+        {
+            return JsonContent.Create(content, new MediaTypeHeaderValue("application/json"), _options);
         }
     }
 }

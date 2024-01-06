@@ -1,8 +1,8 @@
 using ApiModels;
 using TCG_Scraper;
-using TcgScraperTests.Mocks;
+using Tests.Mocks;
 
-namespace TcgScraperTests
+namespace Tests
 {
     [TestClass]
     public class TcgScraperTests

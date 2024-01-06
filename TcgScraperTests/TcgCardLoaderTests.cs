@@ -1,11 +1,8 @@
-﻿using ApiModels;
-using CommonLibrary;
-using DataAccess.SqlModels;
-using System.Text.Json;
+﻿using DataAccess.SqlModels;
 using TCG_Scraper;
-using TcgScraperTests.Mocks;
+using Tests.Mocks;
 
-namespace TcgScraperTests
+namespace Tests
 {
     [TestClass]
     public class TcgCardLoaderTests
@@ -29,12 +26,12 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportAllCardData_LoadsSingleCardDataSuccessfully()
+        public void ImportAllCardData_SingleCard_LoadsSuccessfully()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos().Take(1);
+            var cardData = MockCardsImport.InitTestCardInfos().Take(1);
 
             loader.ImportAllCardData(cardData, productLineId);
             Assert.IsTrue(_cards.DataLoaded is not null
@@ -48,12 +45,12 @@ namespace TcgScraperTests
                 && _customAttributesValues.DataLoaded.FirstOrDefault()?.ProductId == cardData.First().ProductId.AsInt());
         }
 
-        public void ImportAllCardData_LoadsCardDataSuccessfullyIgnoringDuplicates()
+        public void ImportAllCardData_MultipleCardsWithDuplicates_LoadsSuccessfullyIgnoringDuplicates()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos();
+            var cardData = MockCardsImport.InitTestCardInfos();
             var distinctData = cardData.DistinctBy(c => c.ProductId);
             var allAtts = distinctData.SelectMany(c => c.CustomAttributes);
 
@@ -71,11 +68,11 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCards_LoadsSingleCardSuccessfully()
+        public void ImportCards_SingleCard_LoadsSuccessfully()
         {
             InitTestVars();
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos().Take(1);
+            var cardData = MockCardsImport.InitTestCardInfos().Take(1);
 
             loader.ImportCards(cardData);
 
@@ -84,11 +81,11 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCards_LoadsMultipleCardsSuccessfully()
+        public void ImportCards_MultipleCards_LoadsSuccessfully()
         {
             InitTestVars();
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos();
+            var cardData = MockCardsImport.InitTestCardInfos();
 
             loader.ImportCards(cardData);
 
@@ -97,12 +94,12 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCustomAttributes_ImportSingleAttributeSuccessfully()
+        public void ImportCustomAttributes_SingleAttribute_ImportsSuccessfully()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos().Take(1);
+            var cardData = MockCardsImport.InitTestCardInfos().Take(1);
 
             loader.ImportCustomAttributes(cardData, productLineId);
 
@@ -112,12 +109,12 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCustomAttributes_ImportMultipleAttributesSuccessfullyIgnoringDuplicates()
+        public void ImportCustomAttributes_MultipleAttributesWithDuplicates_ImportsSuccessfullyIgnoringDuplicates()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos();
+            var cardData = MockCardsImport.InitTestCardInfos();
             var distinctAtts = cardData.SelectMany(data => data.CustomAttributes).DistinctBy(kvp => kvp.Key);
 
             loader.ImportCustomAttributes(cardData, productLineId);
@@ -128,12 +125,12 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCustomAttributesValues_ImportSingleCardAttributesValuesSuccessfully()
+        public void ImportCustomAttributesValues_SingleCardAttributesValues_ImportSuccessfully()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos().Take(1);
+            var cardData = MockCardsImport.InitTestCardInfos().Take(1);
             var distinctAtts = cardData.SelectMany(data => data.CustomAttributes).DistinctBy(kvp => kvp.Key);
             var custAttsImport = distinctAtts.Select((atts, i) => new CustomAttribute()
             {
@@ -153,12 +150,12 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public void ImportCustomAttributesValues_ImportMultipleCardAttributesValuesSuccessfully()
+        public void ImportCustomAttributesValues_MultipleCardAttributesValues_ImportsSuccessfully()
         {
             InitTestVars();
             var productLineId = 62;
             var loader = new TcgCardLoader(_logger, _dataAccess);
-            var cardData = InitTestCardInfos().DistinctBy(c => c.ProductId);
+            var cardData = MockCardsImport.InitTestCardInfos().DistinctBy(c => c.ProductId);
             var distinctAtts = cardData.SelectMany(data => data.CustomAttributes).DistinctBy(kvp => kvp.Key);
             var custAttsImport = distinctAtts.Select((atts, i) => new CustomAttribute()
             {
@@ -175,27 +172,6 @@ namespace TcgScraperTests
             Assert.IsTrue(_customAttributesValues.DataLoaded is not null
                 && _customAttributesValues.DataLoaded.All(val => cardData.Any(c => c.ProductId.AsInt() == val.ProductId
                     && c.CustomAttributes.Any(ca => ca.Value.AsString() == val.Value && ca.Key == attsDic[val.CustomAttributeId]))));
-        }
-
-        public static List<CardInfo> InitTestCardInfos()
-        {
-            return new List<CardInfo> { new CardInfo()
-            {
-                ProductId = 1.0f,
-                CustomAttributes = new Dictionary<string, JsonElement> { { "Test", default } }
-            },
-            new CardInfo() {
-                ProductId = 2.0f,
-                CustomAttributes = new Dictionary<string, JsonElement> { { "Test", default } }
-            },
-            new CardInfo() {
-                ProductId = 3.0f,
-                CustomAttributes = new Dictionary<string, JsonElement> { { "Test2", default } }
-            },
-            new CardInfo() {
-                ProductId = 1.0f,
-                CustomAttributes = new Dictionary<string, JsonElement> { { "Test3", default } }
-            }};
         }
     }
 }

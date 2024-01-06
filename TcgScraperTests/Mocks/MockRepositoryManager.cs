@@ -2,7 +2,7 @@
 using DataAccess.Repositories;
 using DataAccess.SqlModels;
 
-namespace TcgScraperTests.Mocks
+namespace Tests.Mocks
 {
     internal class MockRepositoryManager : IRepositoryManager
     {

@@ -4,32 +4,29 @@ using TCG_Scraper;
 
 namespace CardDataAPI
 {
-    public class Program
+    public class Startup
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var configBuilder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true);
-
-            var config = new Configuration(configBuilder.Build());
-            var repositoryManager = new RepositoryManager(config.ConnectionSettings);
-            var logger = new ApiLogger();
-
-            InitScraper(repositoryManager, logger, config);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<IRepositoryManager>(repositoryManager);
-            builder.Services.AddSingleton<IApiLogger>(logger);
-            builder.Services.AddSingleton(config);
+            builder.Services.AddTransient((sp) => new Configuration(sp.GetService<IConfiguration>()));
+            builder.Services.AddTransient<IApiLogger>((sp) => new ApiLogger());
+            builder.Services.AddTransient<IRepositoryManager>((sp) => new RepositoryManager(sp.GetService<Configuration>().ConnectionSettings));
 
             var app = builder.Build();
+
+            var config = new Configuration(app.Configuration);
+            var repositoryManager = new RepositoryManager(config.ConnectionSettings);
+            var logger = new ApiLogger();
+
+            if (app.Environment.EnvironmentName != "Tests")
+                InitScraper(repositoryManager, logger, config);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DockerDev")

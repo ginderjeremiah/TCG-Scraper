@@ -1,6 +1,6 @@
 ﻿using CommonLibrary;
 
-namespace TcgScraperTests.Mocks
+namespace Tests.Mocks
 {
     internal class MockLogger : IApiLogger
     {
