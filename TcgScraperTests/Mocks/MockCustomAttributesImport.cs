@@ -1,6 +1,6 @@
 ﻿using DataAccess.SqlModels;
 
-namespace TcgScraperTests.Mocks
+namespace Tests.Mocks
 {
     internal class MockCustomAttributesImport : MockCustomAttributes
     {

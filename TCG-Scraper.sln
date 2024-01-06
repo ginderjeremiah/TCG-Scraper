@@ -10,7 +10,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCG-Scraper", "TCG-Scraper\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{D94B0F8E-7B59-44A4-812A-3028000FB4F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcgScraperTests", "TcgScraperTests\TcgScraperTests.csproj", "{1BB85945-C7AA-4654-AD11-D62C7C19B563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "TcgScraperTests\Tests.csproj", "{1BB85945-C7AA-4654-AD11-D62C7C19B563}"
+	ProjectSection(ProjectDependencies) = postProject
+		{673CC8F1-8E97-4626-BCE1-C7CCC0130469} = {673CC8F1-8E97-4626-BCE1-C7CCC0130469}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{133D980F-500C-4713-B026-FF97153F363D}"
 EndProject

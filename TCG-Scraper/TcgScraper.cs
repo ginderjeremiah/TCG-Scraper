@@ -50,7 +50,7 @@ namespace TCG_Scraper
             Logger = logger;
             CardLoader = new(Logger, DataAccess);
             CardRequester = new(Logger);
-            Settings = new ScraperSettings
+            Settings = settings ?? new ScraperSettings
             {
                 CardsPerRequest = 48,
                 SaveJsonPath = null,

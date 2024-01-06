@@ -1,7 +1,7 @@
 ﻿using TCG_Scraper;
-using TcgScraperTests.Mocks;
+using Tests.Mocks;
 
-namespace TcgScraperTests
+namespace Tests
 {
     [TestClass]
     public class TcgCardRequesterTests
@@ -27,7 +27,7 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public async Task GetProductLine_ValidProductLineNameLoadsSuccessfully()
+        public async Task GetProductLine_ValidProductLineName_LoadsSuccessfully()
         {
             var productLineName = "Flesh and Blood TCG";
             var logger = new MockLogger();
@@ -39,7 +39,7 @@ namespace TcgScraperTests
         }
 
         [TestMethod]
-        public async Task GetProductLines_LoadsSuccessfully()
+        public async Task GetProductLines_NormalUsage_LoadsSuccessfully()
         {
             var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);

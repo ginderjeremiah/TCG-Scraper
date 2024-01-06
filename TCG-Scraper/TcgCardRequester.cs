@@ -1,8 +1,6 @@
 ﻿using ApiModels;
 using CommonLibrary;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace TCG_Scraper
 {
@@ -11,7 +9,6 @@ namespace TCG_Scraper
         private const string _productLinesUrl = "https://mp-search-api.tcgplayer.com/v1/search/productLines?";
         private const string _setListUrl = "https://mpapi.tcgplayer.com/v2/Catalog/SetNames?active=true&categoryId=";
         private const string _cardListUrl = "https://mp-search-api.tcgplayer.com/v1/search/request?";
-        private readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         private static HttpClient Client { get; } = new();
 
@@ -39,8 +36,7 @@ namespace TCG_Scraper
 
             Logger.Log("Product Lines request succeeded.");
 
-            var responseStream = await response.Content.ReadAsStreamAsync();
-            return JsonSerializer.Deserialize<List<ProductLine>>(responseStream, _options)
+            return (await response.DeserializeAsync<List<ProductLine>>())
                 ?? throw new Exception("Failed to parse Product Lines request.");
         }
 
@@ -55,8 +51,8 @@ namespace TCG_Scraper
 
             Logger.Log("Set list request succeeded.");
 
-            var responseStream = await response.Content.ReadAsStreamAsync();
-            var setsResponse = JsonSerializer.Deserialize<RequestResponse<SetInfo>>(responseStream, _options)
+
+            var setsResponse = (await response.DeserializeAsync<RequestResponse<SetInfo>>())
                 ?? throw new Exception("Set data could not be deserialized.");
 
             return setsResponse.Results;
@@ -71,7 +67,7 @@ namespace TCG_Scraper
         {
             var requestPayload = new RequestPayload(productLineUrlName, setSearchName, skip, totalResults);
 
-            JsonContent searchContent = JsonContent.Create(requestPayload, new MediaTypeHeaderValue("application/json"), _options);
+            JsonContent searchContent = requestPayload.Serialize();
 
             Logger.Log($"Requesting Card Info {requestPayload.From}-{requestPayload.From + requestPayload.Size - 1} for set {requestPayload.Filters.Term.SetName[0]}");
 
@@ -82,9 +78,7 @@ namespace TCG_Scraper
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("Card List request failed.");
 
-                var responseStream = await response.Content.ReadAsStreamAsync();
-
-                RequestResponse<CardInfoResults> result = JsonSerializer.Deserialize<RequestResponse<CardInfoResults>>(responseStream, _options)
+                var result = (await response.DeserializeAsync<RequestResponse<CardInfoResults>>())
                     ?? throw new Exception("Card info data could not be deserialized.");
 
                 if (result.Results.Count < 1)
