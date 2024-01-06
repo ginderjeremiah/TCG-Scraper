@@ -82,7 +82,7 @@ namespace TCG_Scraper
             {
                 if (_productLine is null || _productLine.ProductLineName != productLineName)
                 {
-                    _productLine = await CardRequester.GetProductLine(p => p.ProductLineName == productLineName);
+                    _productLine = await LoadAndGetProductLine(p => p.ProductLineName == productLineName);
                 }
                 await LoadCardsByProductLine(_productLine);
             }
@@ -99,7 +99,7 @@ namespace TCG_Scraper
             {
                 if (_productLine is null || _productLine.ProductLineId != productLineId)
                 {
-                    _productLine = await CardRequester.GetProductLine(p => p.ProductLineId == productLineId);
+                    _productLine = await LoadAndGetProductLine(p => p.ProductLineId == productLineId);
                 }
 
                 await LoadCardsByProductLine(_productLine);
@@ -158,12 +158,15 @@ namespace TCG_Scraper
             Logger.Log($"Finished loading cards for {productLine.ProductLineName}. Elapsed time: {elapsedTime} seconds.");
         }
 
-        public async Task<List<List<CardInfo>>> ScrapeCardsInSet(ProductLine productLine, SetInfo setInfo, int totalCardsInProductLine)
+        public async Task<List<List<CardInfo>>> ScrapeCardsInSet(ProductLine productLine, SetInfo setInfo, int totalCardsInProductLine = -1)
         {
             List<List<CardInfo>> cardLists = new();
 
             if (MaxCardsPerSet < 1)
                 return cardLists;
+
+            if (totalCardsInProductLine < 0)
+                totalCardsInProductLine = await CardRequester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
 
             var setSearchName = setInfo.CleanSetName.ToLower().Replace(" ", "-");
             var results = await CardRequester.RequestCardInfos(productLine.ProductLineUrlName, setSearchName, 0, Math.Min(CardsPerRequest, MaxCardsPerSet));
@@ -189,6 +192,14 @@ namespace TCG_Scraper
             }
 
             return cardLists;
+        }
+
+        private async Task<ProductLine> LoadAndGetProductLine(Func<ProductLine, bool> validator)
+        {
+            var productLines = await CardRequester.GetProductLines();
+            CardLoader.ImportProductLines(productLines);
+            return productLines.FirstOrDefault(validator)
+                ?? throw new Exception("Product Line not found.");
         }
     }
 }

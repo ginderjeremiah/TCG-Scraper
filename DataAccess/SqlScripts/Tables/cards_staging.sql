@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS public.cards_staging
 (
     shipping_category_id integer NOT NULL,
     duplicate boolean NOT NULL,
-    product_line_url_name text COLLATE pg_catalog."default" NOT NULL,
     product_url_name text COLLATE pg_catalog."default" NOT NULL,
     product_type_id integer NOT NULL,
     rarity_name text COLLATE pg_catalog."default",
@@ -24,7 +23,6 @@ CREATE TABLE IF NOT EXISTS public.cards_staging
     total_listings integer NOT NULL,
     product_line_id integer NOT NULL,
     product_status_id integer NOT NULL,
-    product_line_name text COLLATE pg_catalog."default" NOT NULL,
     max_fulfullable_quantity integer NOT NULL,
     lowest_price real NOT NULL,
     CONSTRAINT cards_staging_pkey PRIMARY KEY (product_id)

@@ -14,7 +14,7 @@ namespace CardDataAPI.Controllers
         [HttpGet]
         public IActionResult Cards(int? offset, int? limit)
         {
-            return Json(Repositories.Cards.GetAllCards(offset ?? 0, limit ?? 100));
+            return Json(Repositories.Cards.GetCards(offset ?? 0, limit ?? 100));
         }
     }
 }

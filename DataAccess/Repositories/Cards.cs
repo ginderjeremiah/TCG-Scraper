@@ -7,7 +7,7 @@ namespace DataAccess.Repositories
     {
         public Cards(string connectionString) : base(connectionString) { }
 
-        public List<Card> GetAllCards(int offset = 0, int limit = 100)
+        public List<Card> GetCards(int offset = 0, int limit = 100)
         {
             limit = Math.Min(limit, 1000);
 
@@ -24,7 +24,7 @@ namespace DataAccess.Repositories
 
     public interface ICards
     {
-        public List<Card> GetAllCards(int offset = 0, int limit = 100);
+        public List<Card> GetCards(int offset = 0, int limit = 100);
         public void ImportCards(IEnumerable<Card> cards);
     }
 }

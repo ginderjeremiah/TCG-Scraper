@@ -8,7 +8,7 @@ namespace Tests
     public class TcgScraperTests
     {
         [TestMethod]
-        public async Task ExecuteAtIntervals_InvalidProductLineName_ThrowsException()
+        public async Task ExecuteAtIntervals_InvalidProductLineName_LogsError()
         {
             var productLineName = "DoesNotExist";
             var logger = new MockLogger();
@@ -24,7 +24,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public async Task ExecuteAtIntervals_InvalidProductLineId_ThrowsException()
+        public async Task ExecuteAtIntervals_InvalidProductLineId_LogsError()
         {
             var productLineId = -1;
             var logger = new MockLogger();
@@ -50,6 +50,8 @@ namespace Tests
             {
                 AwaitableTask = new Task(() => dataLoaded = true)
             };
+            var testProductLines = new MockProductLinesImport();
+            dataAccess.ProductLines = testProductLines;
             dataAccess.Cards = testCards;
             var scraper = new TcgScraper(dataAccess, logger)
             {
@@ -61,6 +63,7 @@ namespace Tests
 
             await Task.WhenAny(testCards.AwaitableTask, Task.Delay(TimeSpan.FromSeconds(20)));
             Assert.IsTrue(dataLoaded && testCards.DataLoaded is not null && testCards.DataLoaded.Any());
+            Assert.IsTrue(testProductLines.DataLoaded is not null && testProductLines.DataLoaded.Any());
         }
 
         [TestMethod]
@@ -117,6 +120,8 @@ namespace Tests
             {
                 AwaitableTask = new Task(() => dataLoaded = true)
             };
+            var testProductLines = new MockProductLinesImport();
+            dataAccess.ProductLines = testProductLines;
             dataAccess.Cards = testCards;
             var scraper = new TcgScraper(dataAccess, logger)
             {
@@ -128,6 +133,7 @@ namespace Tests
 
             await Task.WhenAny(testCards.AwaitableTask, Task.Delay(TimeSpan.FromSeconds(20)));
             Assert.IsTrue(dataLoaded && testCards.DataLoaded is not null && testCards.DataLoaded.Any());
+            Assert.IsTrue(testProductLines.DataLoaded is not null && testProductLines.DataLoaded.Any());
         }
 
         [TestMethod]
@@ -164,7 +170,6 @@ namespace Tests
             {
                 CleanSetName = "wilds-of-eldraine"
             };
-            var totalCardsInSet = 5;
             var logger = new MockLogger();
             var dataAccess = new MockRepositoryManager();
             var scraper = new TcgScraper(dataAccess, logger)
@@ -173,9 +178,9 @@ namespace Tests
                 CardsPerRequest = 5,
             };
 
-            var result = await scraper.ScrapeCardsInSet(productLine, setInfo, totalCardsInSet);
+            var results = await scraper.ScrapeCardsInSet(productLine, setInfo);
 
-            Assert.IsTrue(result.Count == 1 && result[0].Count == 5);
+            Assert.IsTrue(results.Count == 1 && results[0].Count == 5);
         }
     }
 }

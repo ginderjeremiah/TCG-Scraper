@@ -11,7 +11,6 @@ AS $BODY$
 	SET 
 		shipping_category_id = cards_staging.shipping_category_id,
 		duplicate = cards_staging.duplicate,
-		product_line_url_name = cards_staging.product_line_url_name,
 		product_url_name = cards_staging.product_url_name,
 		product_type_id = cards_staging.product_type_id,
 		rarity_name = cards_staging.rarity_name,
@@ -28,7 +27,6 @@ AS $BODY$
 		total_listings = cards_staging.total_listings,
 		product_line_id = cards_staging.product_line_id,
 		product_status_id = cards_staging.product_status_id,
-		product_line_name = cards_staging.product_line_name,
 		max_fulfullable_quantity = cards_staging.max_fulfullable_quantity,
 		lowest_price = cards_staging.lowest_price
 	FROM public.cards_staging
@@ -37,7 +35,6 @@ AS $BODY$
 	INSERT INTO public.cards (
 		shipping_category_id,
 		duplicate,
-		product_line_url_name,
 		product_url_name,
 		product_type_id,
 		rarity_name,
@@ -55,14 +52,12 @@ AS $BODY$
 		total_listings,
 		product_line_id,
 		product_status_id,
-		product_line_name,
 		max_fulfullable_quantity,
 		lowest_price
 	)
 	SELECT
 		cards_staging.shipping_category_id,
 		cards_staging.duplicate,
-		cards_staging.product_line_url_name,
 		cards_staging.product_url_name,
 		cards_staging.product_type_id,
 		cards_staging.rarity_name,
@@ -80,7 +75,6 @@ AS $BODY$
 		cards_staging.total_listings,
 		cards_staging.product_line_id,
 		cards_staging.product_status_id,
-		cards_staging.product_line_name,
 		cards_staging.max_fulfullable_quantity,
 		cards_staging.lowest_price
 	FROM public.cards_staging

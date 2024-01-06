@@ -6,25 +6,25 @@ namespace Tests
     [TestClass]
     public class TcgCardRequesterTests
     {
-        [TestMethod]
-        public async Task GetProductLine_InvalidProductLineName_ThrowsException()
-        {
-            var productLineName = "DoesNotExist";
-            var logger = new MockLogger();
-            var requester = new TcgCardRequester(logger);
+        //[TestMethod]
+        //public async Task GetProductLine_InvalidProductLineName_ThrowsException()
+        //{
+        //    var productLineName = "DoesNotExist";
+        //    var logger = new MockLogger();
+        //    var requester = new TcgCardRequester(logger);
 
-            await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineName == productLineName));
-        }
+        //    await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineName == productLineName));
+        //}
 
-        [TestMethod]
-        public async Task GetProductLine_InvalidProductLineId_ThrowsException()
-        {
-            var productLineId = -1;
-            var logger = new MockLogger();
-            var requester = new TcgCardRequester(logger);
+        //[TestMethod]
+        //public async Task GetProductLine_InvalidProductLineId_ThrowsException()
+        //{
+        //    var productLineId = -1;
+        //    var logger = new MockLogger();
+        //    var requester = new TcgCardRequester(logger);
 
-            await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineId == productLineId));
-        }
+        //    await Assert.ThrowsExceptionAsync<Exception>(async () => await requester.GetProductLine(p => p.ProductLineId == productLineId));
+        //}
 
         [TestMethod]
         public async Task GetProductLine_ValidProductLineName_LoadsSuccessfully()
@@ -33,7 +33,7 @@ namespace Tests
             var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
 
-            var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
+            var productLine = (await requester.GetProductLines()).First(p => p.ProductLineName == productLineName);
 
             Assert.IsTrue(productLine.ProductLineName == productLineName);
         }
@@ -89,7 +89,7 @@ namespace Tests
             var productLineName = "Flesh and Blood TCG";
             var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
-            var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
+            var productLine = (await requester.GetProductLines()).First(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine("");
 
             var cardsInProductLine = await requester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
@@ -119,7 +119,7 @@ namespace Tests
             var numResults = 5;
             var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
-            var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
+            var productLine = (await requester.GetProductLines()).First(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
 
             var results = await requester.RequestCardInfos(productLine.ProductLineUrlName, setSearchName, 0, numResults);
@@ -134,7 +134,7 @@ namespace Tests
             var numResults = 5;
             var logger = new MockLogger();
             var requester = new TcgCardRequester(logger);
-            var productLine = await requester.GetProductLine(p => p.ProductLineName == productLineName);
+            var productLine = (await requester.GetProductLines()).First(p => p.ProductLineName == productLineName);
             var totalCards = await requester.GetTotalCardsForProductLine(productLine.ProductLineUrlName);
             var set = (await requester.GetSets(productLine.ProductLineId)).First();
             var setSearchName = set.CleanSetName.ToLower().Replace(" ", "-");

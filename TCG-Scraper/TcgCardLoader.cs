@@ -10,12 +10,12 @@ namespace TCG_Scraper
     public partial class TcgCardLoader
     {
         private IApiLogger Logger { get; set; }
-        private IRepositoryManager DataAccess { get; set; }
+        private IRepositoryManager Repositories { get; set; }
 
-        public TcgCardLoader(IApiLogger logger, IRepositoryManager dataAccess)
+        public TcgCardLoader(IApiLogger logger, IRepositoryManager repositories)
         {
             Logger = logger;
-            DataAccess = dataAccess;
+            Repositories = repositories;
         }
 
         public void ImportAllCardData(IEnumerable<CardInfo> cardData, int productLineId)
@@ -29,7 +29,7 @@ namespace TCG_Scraper
         public void ImportCards(IEnumerable<CardInfo> cardData)
         {
             var cards = cardData.Select(NewCard);
-            DataAccess.Cards.ImportCards(cards);
+            Repositories.Cards.ImportCards(cards);
         }
 
         public void ImportCustomAttributes(IEnumerable<CardInfo> cardData, int productLineId)
@@ -44,12 +44,12 @@ namespace TCG_Scraper
                     ProductLineId = productLineId
                 });
 
-            DataAccess.CustomAttributes.ImportCustomAttributes(uniqueCustomAtts);
+            Repositories.CustomAttributes.ImportCustomAttributes(uniqueCustomAtts);
         }
 
         public void ImportCustomAttributesValues(IEnumerable<CardInfo> cardData, int productLineId)
         {
-            var customAttsDic = DataAccess.CustomAttributes.GetAttributesByProductLine(productLineId)
+            var customAttsDic = Repositories.CustomAttributes.GetAttributesByProductLine(productLineId)
                 .ToDictionary(att => att.Name, att => att.CustomAttributeId);
 
             var customAttValues = cardData
@@ -62,7 +62,13 @@ namespace TCG_Scraper
                     Value = atts.Value.AsString()
                 }));
 
-            DataAccess.CustomAttributesValues.ImportCustomAttributesValues(customAttValues);
+            Repositories.CustomAttributesValues.ImportCustomAttributesValues(customAttValues);
+        }
+
+        public void ImportProductLines(IEnumerable<ApiModels.ProductLine> productLines)
+        {
+            var pLines = productLines.Select(NewProductLine);
+            Repositories.ProductLines.ImportProductLines(pLines);
         }
 
         private Card NewCard(CardInfo cardInfo)
@@ -72,7 +78,6 @@ namespace TCG_Scraper
                 ProductId = cardInfo.ProductId.AsInt(),
                 ShippingCategoryId = cardInfo.ShippingCategoryId.AsInt(),
                 Duplicate = cardInfo.Duplicate,
-                ProductLineUrlName = cardInfo.ProductLineUrlName,
                 ProductUrlName = cardInfo.ProductUrlName,
                 ProductTypeId = cardInfo.ProductTypeId.AsInt(),
                 RarityName = cardInfo.RarityName,
@@ -89,9 +94,18 @@ namespace TCG_Scraper
                 TotalListings = cardInfo.TotalListings.AsInt(),
                 ProductLineId = cardInfo.ProductLineId.AsInt(),
                 ProductStatusId = cardInfo.ProductStatusId.AsInt(),
-                ProductLineName = cardInfo.ProductLineName,
                 MaxFulfullableQuantity = cardInfo.MaxFulfullableQuantity.AsInt(),
                 LowestPrice = cardInfo.LowestPrice
+            };
+        }
+
+        private DataAccess.SqlModels.ProductLine NewProductLine(ApiModels.ProductLine productLine)
+        {
+            return new DataAccess.SqlModels.ProductLine()
+            {
+                ProductLineId = productLine.ProductLineId,
+                ProductLineName = productLine.ProductLineName,
+                ProductLineUrlName = productLine.ProductLineUrlName
             };
         }
 
