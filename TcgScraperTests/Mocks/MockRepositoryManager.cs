@@ -9,13 +9,12 @@ namespace Tests.Mocks
         public ICards Cards { get; set; } = new MockCards();
         public ICustomAttributes CustomAttributes { get; set; } = new MockCustomAttributesImport();
         public ICustomAttributesValues CustomAttributesValues { get; set; } = new MockCustomAttributesValues();
-
-        public Dictionary<string, object> TestData = new();
+        public IProductLines ProductLines { get; set; } = new MockProductLines();
     }
 
     internal class MockCards : ICards
     {
-        public virtual List<Card> GetAllCards(int offset = 0, int limit = 100) { return new List<Card>(); }
+        public virtual List<Card> GetCards(int offset = 0, int limit = 100) { return new List<Card>(); }
         public virtual void ImportCards(IEnumerable<Card> cards) { }
     }
 
@@ -30,5 +29,11 @@ namespace Tests.Mocks
     {
         public virtual List<CustomAttributesValue> GetCustomAttributesValues(int productId) { return new List<CustomAttributesValue>(); }
         public virtual void ImportCustomAttributesValues(IEnumerable<CustomAttributesValue> atts) { }
+    }
+
+    internal class MockProductLines : IProductLines
+    {
+        public virtual List<ProductLine> GetProductLines(int offset = 0, int limit = 100) { return new List<ProductLine>(); }
+        public virtual void ImportProductLines(IEnumerable<ProductLine> cards) { }
     }
 }

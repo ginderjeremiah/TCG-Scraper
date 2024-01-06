@@ -73,11 +73,6 @@ namespace CommonLibrary
             return JsonSerializer.Deserialize<T>(msg.Content.ReadAsStream(), _options);
         }
 
-        public static async Task<T?> DeserializeAsync<T>(this HttpResponseMessage msg)
-        {
-            return JsonSerializer.Deserialize<T>(await msg.Content.ReadAsStreamAsync(), _options);
-        }
-
         public static JsonContent Serialize<T>(this T content)
         {
             return JsonContent.Create(content, new MediaTypeHeaderValue("application/json"), _options);

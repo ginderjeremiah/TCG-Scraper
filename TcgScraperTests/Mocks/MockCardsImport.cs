@@ -9,7 +9,7 @@ namespace Tests.Mocks
         public Task? AwaitableTask { get; set; }
         public IEnumerable<Card>? DataLoaded { get; set; }
 
-        public override List<Card> GetAllCards(int offset = 0, int limit = 100)
+        public override List<Card> GetCards(int offset = 0, int limit = 100)
         {
             return DataLoaded?.Skip(offset).Take(limit).ToList() ?? new List<Card>();
         }

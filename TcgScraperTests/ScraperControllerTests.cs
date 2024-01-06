@@ -17,7 +17,7 @@ namespace Tests
 
             var response = await client.GetAsync($"/api/Scraper/RefreshProductLine?productLine={productLineId}");
 
-            var data = app.Repositories.Cards.GetAllCards();
+            var data = app.Repositories.Cards.GetCards();
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             Assert.IsFalse(data.Any());
@@ -35,7 +35,7 @@ namespace Tests
 
             var response = await client.GetAsync($"/api/Scraper/RefreshProductLine?productLine={productLineId}");
 
-            var data = app.Repositories.Cards.GetAllCards();
+            var data = app.Repositories.Cards.GetCards();
 
             Console.WriteLine(response.StatusCode);
 

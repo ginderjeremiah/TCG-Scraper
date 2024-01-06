@@ -7,6 +7,7 @@ namespace DataAccess
         private Cards? _cards;
         private CustomAttributes? _customAttributes;
         private CustomAttributesValues? _customAttributesValues;
+        private ProductLines? _productLines;
         private string ConnectionString { get; set; }
 
         public RepositoryManager(ConnectionSettings connectionSettings)
@@ -17,6 +18,7 @@ namespace DataAccess
         public ICards Cards => _cards ??= new Cards(ConnectionString);
         public ICustomAttributes CustomAttributes => _customAttributes ??= new CustomAttributes(ConnectionString);
         public ICustomAttributesValues CustomAttributesValues => _customAttributesValues ??= new CustomAttributesValues(ConnectionString);
+        public IProductLines ProductLines => _productLines ??= new ProductLines(ConnectionString);
     }
 
     public interface IRepositoryManager
@@ -24,6 +26,7 @@ namespace DataAccess
         public ICards Cards { get; }
         public ICustomAttributes CustomAttributes { get; }
         public ICustomAttributesValues CustomAttributesValues { get; }
+        public IProductLines ProductLines { get; }
     }
 }
 

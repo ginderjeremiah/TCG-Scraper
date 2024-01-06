@@ -19,12 +19,6 @@ namespace TCG_Scraper
             Logger = logger;
         }
 
-        public async Task<ProductLine> GetProductLine(Func<ProductLine, bool> validator)
-        {
-            return (await GetProductLines()).FirstOrDefault(validator)
-                ?? throw new Exception("Product Line not found.");
-        }
-
         public async Task<List<ProductLine>> GetProductLines()
         {
             Logger.Log("Requesting Product Lines...");
@@ -36,7 +30,7 @@ namespace TCG_Scraper
 
             Logger.Log("Product Lines request succeeded.");
 
-            return (await response.DeserializeAsync<List<ProductLine>>())
+            return response.Deserialize<List<ProductLine>>()
                 ?? throw new Exception("Failed to parse Product Lines request.");
         }
 
@@ -52,7 +46,7 @@ namespace TCG_Scraper
             Logger.Log("Set list request succeeded.");
 
 
-            var setsResponse = (await response.DeserializeAsync<RequestResponse<SetInfo>>())
+            var setsResponse = response.Deserialize<RequestResponse<SetInfo>>()
                 ?? throw new Exception("Set data could not be deserialized.");
 
             return setsResponse.Results;
@@ -78,7 +72,7 @@ namespace TCG_Scraper
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("Card List request failed.");
 
-                var result = (await response.DeserializeAsync<RequestResponse<CardInfoResults>>())
+                var result = response.Deserialize<RequestResponse<CardInfoResults>>()
                     ?? throw new Exception("Card info data could not be deserialized.");
 
                 if (result.Results.Count < 1)

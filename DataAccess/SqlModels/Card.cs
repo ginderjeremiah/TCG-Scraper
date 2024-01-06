@@ -11,8 +11,6 @@ namespace DataAccess.SqlModels
         public int ShippingCategoryId { get; set; }
         [Column("duplicate")]
         public bool Duplicate { get; set; }
-        [Column("product_line_url_name")]
-        public string ProductLineUrlName { get; set; }
         [Column("product_url_name")]
         public string ProductUrlName { get; set; }
         [Column("product_type_id")]
@@ -45,8 +43,6 @@ namespace DataAccess.SqlModels
         public int ProductLineId { get; set; }
         [Column("product_status_id")]
         public int ProductStatusId { get; set; }
-        [Column("product_line_name")]
-        public string ProductLineName { get; set; }
         [Column("max_fulfullable_quantity")]
         public int MaxFulfullableQuantity { get; set; }
         [Column("lowest_price")]
